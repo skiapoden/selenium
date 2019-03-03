@@ -26,7 +26,8 @@ def get_first_article_link(url):
     links = [l for l in links if len(l.get_attribute('class')) == 0]
 
     exclude_classes = ['internal', 'mw-redirect']
-    exclude_href_patterns = ['.*upload.wikimedia.org.*', '.*/wiki/File:.*', '^#.*', '.*#cite.*']
+    exclude_href_patterns = ['.*upload.wikimedia.org.*', '.*/wiki/File:.*', '^#.*', '.*#cite.*',
+            '.*Help:IPA/.*']
     links = [l for l in links if not contained(exclude_classes, l.get_attribute('class'))]
     links = [l for l in links if not matches(exclude_href_patterns, l.get_attribute('href'))]
 
@@ -43,10 +44,6 @@ def contained(exclude_items, items):
 def matches(patterns, string):
     for pattern in patterns:
         p = re.compile(pattern)
-        print('testing {} on {}', pattern, string)
         if p.match(string):
-            print(True)
             return True
-        else:
-            print(False)
     return False
