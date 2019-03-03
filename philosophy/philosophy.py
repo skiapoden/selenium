@@ -2,22 +2,42 @@
 
 from selenium import webdriver
 
-starting_url = 'https://en.wikipedia.org/wiki/Special:Random'
-article_selector = '#my-content-text'
-exclude_link_parent_classes = ['hatnote', 'mw-collapsible']
+def get_first_link_url(url, class_exclude_list, parent_class_exclude_list):
+    article_content = driver.find_element_by_css_selector(article_selector)
+    first_link = None
+    for link in article_content.find_elements_by_tag_name('a'):
+        link_parent = link.find_element_by_xpath('..')
 
-driver = webdriver.Chrome()
-driver.get(starting_url)
+        # exclude classes of the link itself
+        classes = link.get_attribute('class')
+        if classes != '':
+            for exclude_class in class_exclude_list:
+                if exclude_class in classes:
+                    continue
 
-first_link = None
-article_content = driver.find_element_by_css_selector(article_selector)
-for link in article_content.find_elements_by_tag_name('a'):
-    print(link.get_attribute('href'))
-    link_parent = link.find_element_by_xpath('..')
-    classes = link_parent.get_attribute('class')
-    for exclude_class in exclude_link_parent_classes:
-        print(exclude_class, classes)
-        if exclude_class not in classes:
+        # exclude classes of the parent object
+        # TODO: implement recursively
+        parent_classes = link_parent.get_attribute('class')
+        if parent_classes == '':
             first_link = link
             break
-print(first_link.get_attribute('href'))
+        for exclude_class in parent_class_exclude_list:
+            if exclude_class not in parent_classes:
+                first_link = link
+                break
+
+    if first_link == None:
+        return ''
+    return first_link.get_attribute('href')
+
+if __name__ == '__main__':
+    starting_url = 'https://en.wikipedia.org/wiki/Special:Random'
+    article_selector = 'div.mw-parser-output'
+    exclude_link_classes = ['image']
+    exclude_link_parent_classes = ['hatnote', 'mw-collapsible']
+
+    driver = webdriver.Chrome()
+    driver.get(starting_url)
+
+    first_link_href = get_first_link_url(starting_url, exclude_link_classes, exclude_link_parent_classes)
+    print(first_link_href)
