@@ -9,7 +9,7 @@ class FirstLinkTest(unittest.TestCase):
     base_url = 'https://en.wikipedia.org/wiki/'
     links_from_to = {
         'Turkish_language': 'Turkic_languages',
-        'Siberia': 'Russian_language',
+        'Siberia': 'Region',
         'Baveh': 'Persian_language',
         'Rod_Levitt': 'Portland,_Oregon'
     }

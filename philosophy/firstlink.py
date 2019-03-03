@@ -1,42 +1,52 @@
 #!/usr/bin/env python3
 
 from selenium import webdriver
-
-starting_url = 'https://en.wikipedia.org/wiki/Special:Random'
-article_selector = 'div.mw-parser-output'
-exclude_link_classes = ['image']
-exclude_link_parent_classes = ['hatnote', 'mw-collapsible']
+import re
 
 driver = webdriver.Chrome()
 
-def get_first_article_link(article_url):
-    return get_first_link_url(article_url, exclude_link_classes, exclude_link_parent_classes)
+"""
+The first link of an article can be found through this path:
 
-def get_first_link_url(url, class_exclude_list, parent_class_exclude_list):
+div#content
+    div#bodyContent
+        div#mw-content-text
+            div.mw-parser-output
+                p:first-of-type
+"""
+def get_first_article_link(url):
     driver.get(url)
-    article_content = driver.find_element_by_css_selector(article_selector)
+
     first_link = None
-    for link in article_content.find_elements_by_tag_name('a'):
-        link_parent = link.find_element_by_xpath('..')
+    div_content = driver.find_element_by_css_selector('div#mw-content-text')
+    div_output = div_content.find_element_by_css_selector('div.mw-parser-output')
+    paragraphs = div_output.find_elements_by_tag_name('p')
+    paragraphs = [p for p in paragraphs if not contained(['mw-empty-elt'], p.get_attribute('class'))]
+    links = paragraphs[0].find_elements_by_tag_name('a')
+    links = [l for l in links if len(l.get_attribute('class')) == 0]
 
-        # exclude classes of the link itself
-        classes = link.get_attribute('class')
-        if classes != '':
-            for exclude_class in class_exclude_list:
-                if exclude_class in classes:
-                    continue
+    exclude_classes = ['internal', 'mw-redirect']
+    exclude_href_patterns = ['.*upload.wikimedia.org.*', '.*/wiki/File:.*', '^#.*', '.*#cite.*']
+    links = [l for l in links if not contained(exclude_classes, l.get_attribute('class'))]
+    links = [l for l in links if not matches(exclude_href_patterns, l.get_attribute('href'))]
 
-        # exclude classes of the parent object
-        # TODO: implement recursively
-        parent_classes = link_parent.get_attribute('class')
-        if parent_classes == '':
-            first_link = link
-            break
-        for exclude_class in parent_class_exclude_list:
-            if exclude_class not in parent_classes:
-                first_link = link
-                break
+    if len(links) > 0:
+        return links[0].get_attribute('href')
+    raise Exception('unable to find first article link')
 
-    if first_link == None:
-        return ''
-    return first_link.get_attribute('href')
+def contained(exclude_items, items):
+    for exclude in exclude_items:
+        if exclude in items:
+            return True
+    return False
+
+def matches(patterns, string):
+    for pattern in patterns:
+        p = re.compile(pattern)
+        print('testing {} on {}', pattern, string)
+        if p.match(string):
+            print(True)
+            return True
+        else:
+            print(False)
+    return False
