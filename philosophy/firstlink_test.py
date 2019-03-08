@@ -6,6 +6,8 @@ from firstlink import get_first_article_link
 
 class FirstLinkTest(unittest.TestCase):
 
+    # TODO: wrap test case maps with different Wikipedia languages
+
     base_url = 'https://en.wikipedia.org/wiki/'
     links_from_to = {
         'Turkish_language': 'Turkic_languages',
