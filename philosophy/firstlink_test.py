@@ -1,64 +1,82 @@
 #!/usr/bin/env python3
 
+# -*- coding: utf-8 -*-
+
 import unittest
 
 from firstlink import get_first_article_link
 
 class FirstLinkTest(unittest.TestCase):
 
-    # TODO: wrap test case maps with different Wikipedia languages
-
-    base_url = 'https://en.wikipedia.org/wiki/'
+    base_url_fmt = 'https://{}.wikipedia.org/wiki/{}'
     links_from_to = {
-        'Turkish_language': 'Turkic_languages',
-        'Baveh': 'Persian_language',
-        'Rod_Levitt': 'Portland,_Oregon',
-        'Bristol_stool_scale': 'Medicine',
-        'Kaiserschmarrn': 'Kaiser',
-        'Sciapode': 'Paris',
-        'Beer': 'Alcoholic_drink',
-        'Glenn_Gould': 'Johann_Sebastian_Bach',
-        'Oswald_Mosley': 'Member_of_parliament',
-        'Semiconductor': 'Electrical_conductor'
+        'en': {
+            'Turkish_language': 'Turkic_languages',
+            'Baveh': 'Persian_language',
+            'Rod_Levitt': 'Portland,_Oregon',
+            'Bristol_stool_scale': 'Medicine',
+            'Kaiserschmarrn': 'Kaiser',
+            'Sciapode': 'Paris',
+            'Beer': 'Alcoholic_drink',
+            'Glenn_Gould': 'Johann_Sebastian_Bach',
+            'Oswald_Mosley': 'Member_of_parliament',
+            'Semiconductor': 'Electrical_conductor'
+        },
+        'de': {
+            'Albert_Einstein': '14._M%C3%A4rz',
+            'Königspfalz': 'Fr%C3%BChmittelalter',
+            'Völkerwanderung': 'Migrationssoziologie'
+        }
     }
 
     def test_get_first_article_link(self):
-        for source_article in self.links_from_to:
-            # arrange
-            article_url = self.base_url + source_article
-            target_url = self.base_url + self.links_from_to[source_article]
+        for lang in self.links_from_to:
+            for source_article in self.links_from_to[lang]:
+                # arrange
+                article_url = self.base_url_fmt.format(lang, source_article)
+                target_url = self.base_url_fmt.format(lang, self.links_from_to[lang][source_article])
 
-            # act
-            found_url = get_first_article_link(article_url)
+                # act
+                found_url = get_first_article_link(article_url)
 
-            # assert
-            self.assertEqual(target_url, found_url)
+                # assert
+                self.assertEqual(target_url, found_url)
+
 
     stop_after_hops = 20
-    target = 'https://en.wikipedia.org/wiki/Philosophy'
+    target_fmt = 'https://{}.wikipedia.org/wiki/{}'
     distances = {
-        'Social_science': 7,
-        'Teacup': 12,
-        'Worthy_Patterson': stop_after_hops,
+        ('en', 'Philosophy'): {
+            'Social_science': 7,
+            'Teacup': 12,
+            'Worthy_Patterson': stop_after_hops,
+        },
+        ('de', 'Philosophie'): {
+            # TODO: find test cases that don't break the logic
+        }
     }
 
     def test_find_random_n_away_from_target(self):
-        for source in self.distances:
-            # arrange
-            url = self.base_url + source
+        for lang_target in self.distances:
+            for source in self.distances[lang_target]:
+                # arrange
+                url = self.base_url_fmt.format(lang_target[0], source)
 
-            # act
-            hops = -1 # 0 after initial article is browsed
-            while hops < self.stop_after_hops:
-                url = get_first_article_link(url)
-                hops += 1
-                if url == self.target:
-                    hops += 1 # target article is not browsed
-                    break
+                # act
+                hops = -1 # 0 after initial article is browsed
+                while hops < self.stop_after_hops:
+                    try:
+                        url = get_first_article_link(url)
+                    except Exception as e:
+                        print(e)
+                    hops += 1
+                    if url == self.target_fmt.format(*lang_target):
+                        hops += 1 # target article is not browsed
+                        break
 
-            # assert
-            expected = self.distances[source]
-            self.assertEqual(hops, expected, '{} took {} hops, expected {}'.format(source, hops, expected))
+                # assert
+                expected = self.distances[lang_target][source]
+                self.assertEqual(hops, expected, '{} took {} hops, expected {}'.format(source, hops, expected))
 
 if __name__ == '__main__':
     unittest.main()
