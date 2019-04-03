@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <wikiHopper>
+        <lang>DE</lang>
+        <advanced-testing value="cool" />
+        <target>https://de.wikipedia.org/wiki/Philosophie</target>
+        <max-hops>20</max-hops>
+        <input>links.txt</input>
+        <input-advanced>links.all.txt</input-advanced>
+        <output>results.csv</output>
+    </wikiHopper>
+    <other>
+        
+    </other>
+</config>

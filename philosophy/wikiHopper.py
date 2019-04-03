@@ -2,28 +2,40 @@
 
 import os
 import logging as vsklogger
+import xml.etree.ElementTree as ET
+
 from selenium import webdriver
 from firstlink import get_first_article_link
 
 # configure logger
 vsklogger.basicConfig(level=vsklogger.ERROR)
 
-# TODO: config in xml
-TARGET = "https://de.wikipedia.org/wiki/Philosophie"
-PREFIX_DE = "https://de.wikipedia.org/wiki/"
-MAX_HOPS = 20
-INPUT_FILE_NAME = "links.txt"
-INPUT_FILE_NAME = "links.all.txt"
-OUTPUT_FILE_NAME = "results.csv"
-
+# read configuration file
 dirname = os.path.dirname(__file__)
+config = os.path.join(dirname, "config.xml")
+tree = ET.parse(config)
+root = tree.getroot()
+
+TARGET = root.findtext("wikiHopper/target")
+if root.findtext("wikiHopper/lang") == "DE":
+    PREFIX = "https://de.wikipedia.org/wiki/"
+else:
+    raise Exception("Language not supported")
+if root.find("wikiHopper/advanced-testing").get("value") == "cool":
+    INPUT_FILE_NAME = root.findtext("wikiHopper/input-advanced")
+else:
+    INPUT_FILE_NAME = root.findtext("wikiHopper/input")
+OUTPUT_FILE_NAME = root.findtext("wikiHopper/output")
+MAX_HOPS = int(root.findtext("wikiHopper/max-hops"))
+
+vsklogger.info("Configuration configured")
+
 input_file = os.path.join(dirname, INPUT_FILE_NAME)
 output_file = os.path.join(dirname, OUTPUT_FILE_NAME)
 
 driver = webdriver.Chrome()
 
 # get links
-# TODO: this but better
 terms = [line.rstrip('\n') for line in open(input_file) if not line.startswith('#') and line.strip()]
 
 print("##########################################################")
@@ -35,7 +47,7 @@ f = open(output_file,"w+")
 for term in terms:
 
     hops = 0
-    url = PREFIX_DE + term
+    url = PREFIX + term
     while True:
 
         driver.get(url)
