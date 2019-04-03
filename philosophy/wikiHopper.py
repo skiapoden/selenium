@@ -1,24 +1,36 @@
 #!/usr/bin/env python3
 
+import os
+import logging as vsklogger
 from selenium import webdriver
 from firstlink import get_first_article_link
+
+# configure logger
+vsklogger.basicConfig(level=vsklogger.ERROR)
 
 # TODO: config in xml
 TARGET = "https://de.wikipedia.org/wiki/Philosophie"
 PREFIX_DE = "https://de.wikipedia.org/wiki/"
 MAX_HOPS = 20
-FILE_NAME = "links.txt"
+INPUT_FILE_NAME = "links.txt"
+INPUT_FILE_NAME = "links.all.txt"
+OUTPUT_FILE_NAME = "results.csv"
+
+dirname = os.path.dirname(__file__)
+input_file = os.path.join(dirname, INPUT_FILE_NAME)
+output_file = os.path.join(dirname, OUTPUT_FILE_NAME)
 
 driver = webdriver.Chrome()
 
-# read input file file
-terms = [line.rstrip('\n') for line in open(FILE_NAME)]
+# get links
+# TODO: this but better
+terms = [line.rstrip('\n') for line in open(input_file) if not line.startswith('#') and line.strip()]
 
 print("##########################################################")
 print("#                  Tantum optimus testis                 #")
 print("##########################################################\n")
 
-f = open("results.csv","w+")
+f = open(output_file,"w+")
 
 for term in terms:
 
@@ -29,28 +41,25 @@ for term in terms:
         driver.get(url)
 
         if url == TARGET:
-            # print("SIEG mit {} Hüpfern!".format(hops))
+            vsklogger.debug("SIEG mit {} Hüpfern!".format(hops))
             break
 
         if hops > MAX_HOPS:
-            # print("Ihr hop-Guthaben ist aufgebraucht!")
+            vsklogger.warning("Ihr hop-Guthaben ist aufgebraucht!")
             hops = 'X'
             break
         try:
             url = get_first_article_link(url)
         except Exception as ex:
-            # print(ex)
+            vsklogger.warning(ex)
             hops = 'E'
             break
 
         hops += 1
-
-        # print(">>> {}. hop ({})".format(hops, url))
+        vsklogger.info(">>> {}. hop ({})".format(hops, url))
     
-    # TODO write to file 
     print(">>> {}, {}".format(term, hops))
     f.write("{}, {}\n".format(term, hops))
-    
     
 print("\nAlea iacta est.")
 f.close()
