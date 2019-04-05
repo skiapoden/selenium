@@ -4,12 +4,12 @@
         <lang>DE</lang>
         <advanced-testing value="false" />
         <target>https://de.wikipedia.org/wiki/Philosophie</target>
-        <max-hops>20</max-hops>
+        <max-hops>25</max-hops>
         <input>links.txt</input>
         <input-advanced>links.all.txt</input-advanced>
         <output>results.csv</output>
     </wikiHopper>
     <other>
-        
+        <logger-path>ch.hslu.vsk.fs18.logger</logger-path>
     </other>
 </config>
