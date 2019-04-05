@@ -4,7 +4,7 @@
 
 import unittest
 
-from firstlink import get_first_article_link
+from firstlinkEE import get_first_article_link
 
 class FirstLinkTest(unittest.TestCase):
 

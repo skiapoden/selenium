@@ -1,9 +1,15 @@
-# comment
+# Begriffe für das Philosophie-Spiel (SWT)
+# "https://de.wikipedia.org/wiki/<Begriff>"
+# Redigierte Fassung
 
-Schiebewurst
-Philosophie
-Schnepfendreck
 Zeppelinwurst
 Paris-Syndrom
+Lyoner
+Fleischsalat
+Witzelsucht
+Beaujolais
 Theorie_der_endlichen_Kugelpackungen#Die_Wurstkatastrophe
-Bordkatze_der_Bismarck
+Katholischer_Männerverein_Tuntenhausen
+Fledermausbombe
+Phallografie
+Alfred_Jodl

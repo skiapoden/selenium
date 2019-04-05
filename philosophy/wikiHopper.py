@@ -6,11 +6,10 @@ import selenium.common.exceptions
 from selenium.common.exceptions import InvalidArgumentException as Exeption
 import xml.etree.ElementTree as ET
 
-from selenium import webdriver
 from firstlink import get_first_article_link
 
 # configure logger
-vsklogger.basicConfig(level=vsklogger.ERROR)
+vsklogger.basicConfig(level=vsklogger.INFO, filename="hopper.log")
 
 # read configuration file
 dirname = os.path.dirname(__file__)
@@ -35,8 +34,6 @@ vsklogger.info("Configuration configured")
 input_file = os.path.join(dirname, INPUT_FILE_NAME)
 output_file = os.path.join(dirname, OUTPUT_FILE_NAME)
 
-driver = webdriver.Chrome()
-
 # get links
 terms = [line.rstrip('\n') for line in open(input_file) if not line.startswith('#') and line.strip()]
 
@@ -52,8 +49,6 @@ for term in terms:
     url = PREFIX + term
     while True:
 
-        driver.get(url)
-
         if url == TARGET:
             vsklogger.debug("SIEG mit {} Hüpfern!".format(hops))
             break
@@ -64,6 +59,7 @@ for term in terms:
             break
         try:
             url = get_first_article_link(url)
+            #url = get_first_link(url)
         except Exception as ex:
             vsklogger.warning(ex)
             hops = 'E'
@@ -72,10 +68,8 @@ for term in terms:
         hops += 1
         vsklogger.info(">>> {}. hop ({})".format(hops, url))
     
-    print(">>> {}, {}".format(term, hops))
-    f.write("{}, {}\n".format(term, hops))
+    print("{} , {}".format(term , hops))
+    f.write("{}, {}\n".format(PREFIX + term, hops))
     
 print("\nAlea iacta est.")
 f.close()
-driver.quit()
-# domi.getRect()

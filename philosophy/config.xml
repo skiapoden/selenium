@@ -2,7 +2,7 @@
 <config>
     <wikiHopper>
         <lang>DE</lang>
-        <advanced-testing value="not-cool" />
+        <advanced-testing value="false" />
         <target>https://de.wikipedia.org/wiki/Philosophie</target>
         <max-hops>20</max-hops>
         <input>links.txt</input>
