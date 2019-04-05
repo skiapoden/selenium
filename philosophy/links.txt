@@ -2,14 +2,24 @@
 # "https://de.wikipedia.org/wiki/<Begriff>"
 # Redigierte Fassung
 
-Zeppelinwurst
-Paris-Syndrom
-Lyoner
-Fleischsalat
-Witzelsucht
-Beaujolais
-Theorie_der_endlichen_Kugelpackungen#Die_Wurstkatastrophe
-Katholischer_Männerverein_Tuntenhausen
-Fledermausbombe
-Phallografie
-Alfred_Jodl
+Tee
+Katze
+Lesen
+Blume
+Fluss
+rosarot
+äuä
+publicité
+coca-cola
+
+#Zeppelinwurst
+#Paris-Syndrom
+#Lyoner
+#Fleischsalat
+#Witzelsucht
+#Beaujolais
+#Theorie_der_endlichen_Kugelpackungen#Die_Wurstkatastrophe
+#Katholischer_Männerverein_Tuntenhausen
+#Fledermausbombe
+#Phallografie
+#Alfred_Jodl

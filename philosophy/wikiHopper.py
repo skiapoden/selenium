@@ -59,7 +59,6 @@ for term in terms:
             break
         try:
             url = get_first_article_link(url)
-            #url = get_first_link(url)
         except Exception as ex:
             vsklogger.warning(ex)
             hops = 'E'
@@ -69,6 +68,7 @@ for term in terms:
         vsklogger.info(">>> {}. hop ({})".format(hops, url))
     
     print("{} , {}".format(term , hops))
+    vsklogger.info("{} , {}".format(term , hops))
     f.write("{}, {}\n".format(PREFIX + term, hops))
     
 print("\nAlea iacta est.")

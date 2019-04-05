@@ -1,5 +1,15 @@
 # Readme
 
+## TODO
+
+- [ ] `firstlink` as microservice
+- [ ] Fancy GUI
+- [ ] Loop Detector
+- [ ] Mehrsprachigkeit
+- [ ] Moar XML
+- [ ] Logging in DB
+
+## Firstlink
 `firstlink.py` enthält die Funktionalität, um auf einem Wikipedia-Artikel den
 ersten Link auf einen anderen Artikel zu erkennen und ihn als URL
 zurückzugeben (Funktion `get_first_article_link`). Dabei werden folgende
