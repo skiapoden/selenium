@@ -2,6 +2,8 @@
 
 import os
 import logging as vsklogger
+import selenium.common.exceptions
+from selenium.common.exceptions import InvalidArgumentException as Exeption
 import xml.etree.ElementTree as ET
 
 from selenium import webdriver
@@ -20,7 +22,7 @@ TARGET = root.findtext("wikiHopper/target")
 if root.findtext("wikiHopper/lang") == "DE":
     PREFIX = "https://de.wikipedia.org/wiki/"
 else:
-    raise Exception("Language not supported")
+    raise Exeption("Illegal language")
 if root.find("wikiHopper/advanced-testing").get("value") == "cool":
     INPUT_FILE_NAME = root.findtext("wikiHopper/input-advanced")
 else:

@@ -39,6 +39,6 @@ Für die Tests wird die [englischsrachige Wikipedia](https://en.wikipedia.org/wi
 
 Dieses Programm nimmt eine Liste von Begriffen entgegen und prüft in wievielen Sprüngen man von der (deutschsprachigen) Wikipedia-Seite des Begriffs auf die auf den Artikel "Philosophie" kommt.
 
-Dazu wird die Funktion `get_first_article_link` von `firstlink.py` und schreibt die Anzahl Sprünge in eine CSV-Datei. Bei einer _Exeption_ wird der Buchstabe `E`, bei Überschreitung der maximalen Anzahl Sprünge der Buchstabe `X` eingetragen.
+Dazu wird die Funktion `get_first_article_link` von `firstlink.py` aufgerufen. Anschliessend schreibt das Programm die Anzahl Sprünge in eine CSV-Datei. Bei einer _Exeption_ wird der Buchstabe `E`, bei Überschreitung der maximalen Anzahl Sprünge der Buchstabe `X` eingetragen.
 
 Ziel-Seite, maximale Anzahl Sprünge, Input und Output File können in der Datei `config.xml` angepasst werden.
