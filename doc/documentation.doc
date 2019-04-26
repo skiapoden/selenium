@@ -1,0 +1,165 @@
+<figure>
+<img src="./img/testen.jpg" alt="Entwicklungs-Team beim Testieren" /><figcaption>Entwicklungs-Team beim Testieren</figcaption>
+</figure>
+<h1 id="skiapoden">Skiapoden</h1>
+<p>Microservice für das Wikipedia-Philosophiespiel</p>
+<ol type="1">
+<li>Wählen Sie einen (zufälligen) Wikipedia-Artikel aus.</li>
+<li>Klicken Sie auf den ersten Link zu einem anderen Artikel.</li>
+<li>Zählen Sie die «Hopfen», um den Artikel Philosophie zu erreichen.</li>
+</ol>
+<p>Dieser Microservice hilft Ihnen, das Spiel automatisch zu spielen.</p>
+<p>Die Annahmen, was der erste Link eines Artikels ist, sind:</p>
+<ol type="1">
+<li>Der Link befindet sich innerhalb eines Artikelabsatzes.</li>
+<li>Der Link steht nicht in Klammern oder Klammern.</li>
+<li>Der Link enthält keinen Anker (#).</li>
+<li>Der Link verweist nicht auf eine Datei (File: …)</li>
+<li>Der Link hat die Form / wiki / …</li>
+<li>Die Verknüpfung befindet sich nicht in einer Tabelle oder Box.</li>
+</ol>
+<p>Von den Links, die diese Bedingungen erfüllen, wird der erste ausgewählt.</p>
+<h2 id="anleitung">Anleitung</h2>
+<p>Erstellen Sie zunächst eine CSV-Datei ohne Spaltenüberschriften mit diesen Spalten:</p>
+<ul>
+<li>Wikipedia Sprache: de, en, fr usw.</li>
+<li>Quellartikel: Weihnachten, Kebab, Mexiko usw.</li>
+<li>Zielartikel: Philosophie für unseren Anwendungsfall, aber alles andere gilt auch.</li>
+<li>Erwartete Hops vom Quell- zum Zielartikel: 7 ist das Ziel, aber jede positive Zahl geht.</li>
+</ul>
+<p>Zum Beispiel:</p>
+<pre><code>de,Tatsache,Philosophie,7
+en,Cheese,Philosophy,7
+fr,Langue,Philosophie,7
+ru,Достопримечательность,Философия,7
+de,Zürich,Philosophie,7
+en,Pig,Philosophy,7
+fr,Gridley_(Iowa),Philosophie,7
+ru,Наука,Философия,7
+de,Zwillingsparadoxon,Philosophie,7
+fr,Journalisme,Philosophie,7
+ru,Афины,Философия,7
+de,Käse,Philosophie,7
+en,Competition,Philosophy,7
+fr,Agriculture_du_Tarn,Philosophie,7
+ru,Университет,Философия,7</code></pre>
+<p>Zweitens wählen Sie im Online-Formular für die Testübermittlung die so erstellte Datei für den Upload aus.</p>
+<p>Drittens entscheiden Sie sich für die Hops-Grenze, d.H. nach wie vielen Klicks zum nächsten Artikel-Link, ohne den Zielartikel zu finden, falls der Prozess für den aktuellen Testfall (nicht die gesamte Testserie) angehalten wird.</p>
+<p>Viertens senden Sie das Formular, um die Tests zu starten.</p>
+<p>Fünftens warten Sie, bis der erstellte Bericht zum Download bereit ist.</p>
+<p>Der erstellte Bericht enthält die gleichen Spalten wie die hochgeladene CSV-Datei sowie die folgenden Spalten:</p>
+<ol type="1">
+<li>Die ermittelte Sprungzahl, wie viele Verknüpfungen tatsächlich verfolgt werden mussten, um den Zielartikel zu erreichen, oder -1 im Fehlerfall.</li>
+<li>Eine Nachricht mit folgendem Hinweis:
+<ul>
+<li><code>success</code>: erwartete Sprungzahl = ermittelte Sprungzahl</li>
+<li><code>failure</code>: erwartete Sprungzahl ≠ ermittelte Sprungzahl</li>
+<li><code>[error message]</code>: Schleife erkannt, erster Link nicht gefunden usw.</li>
+</ul></li>
+</ol>
+<h2 id="online-formular">Online Formular</h2>
+<p>Das Online Formular ist unter diesem Link zu finden: <a href="http://skiapoden.herokuapp.com/">hier geht’s zum Online Formular</a></p>
+<figure>
+<img src="./img/formular.png" alt="submission form" /><figcaption>submission form</figcaption>
+</figure>
+<h2 id="api-endpoints">API Endpoints</h2>
+<h3 id="csv"><code>/csv</code></h3>
+<p>Dieser Endpunkt akzeptiert eine CSV-Liste mit Testfällen, die die Wikipedia-Sprache, den Quell- und Zielartikel sowie die erwartete Anzahl von Hops enthält, die zum Erreichen des Zielartikels erforderlich sind:i</p>
+<pre><code>de,Bier,Philosophie,14
+en,Beer,Philosophy,12
+fr,Bière,Philosophie,11
+ru,Пиво,Философия,7</code></pre>
+<p>Der Endpunkt wird wie folgt aufgerufen. Stellen Sie sicher, dass Sie die Option <code>--data-binary</code> verwenden, um die Zeilenumbrüche in der CSV beizubehalten:</p>
+<p><code>curl -X POST https://skiapoden.herokuapp.com/csv --data-binary @tests.csv</code></p>
+<p>Es wird eine CSV-Liste zurückgegeben, die die Anzahl der tatsächlich benötigten Sprünge angibt. Das Ergebnis des Tests wird als «Erfolg» (erwartete und tatsächliche Sprüngezahl ist gleich), «Ausfall» (sonst) oder die Fehlermeldung angezeigt, falls etwas schiefgelaufen ist:</p>
+<pre><code>de,Bier,Philosophie,14,14,success
+en,Beer,Philosophy,12,18,failure
+fr,Bière,Philosophie,11,11,success
+ru,Пиво,Философия,7,18,failure</code></pre>
+<h3 id="hopcount"><code>/hopcount</code></h3>
+<p>Dieser Endpunkt akzeptiert eine JSON-Struktur von Testfällen, führt diese aus und gibt einen JSON-Bericht mit Testergebnissen zurück. Verwendungszweck:</p>
+<p><code>curl -X POST https://skiapoden.herokuapp.com/hopcount -d @hopcount.json</code></p>
+<p>Mit der Eingabe <code>hopcount.json</code> sieht das so aus:</p>
+<pre><code>[
+  {
+    &quot;lang&quot;: &quot;de&quot;,
+    &quot;source&quot;: &quot;Medizin&quot;,
+    &quot;target&quot;: &quot;Philosophie&quot;,
+    &quot;expected&quot;: 7
+  },
+  {
+    &quot;lang&quot;: &quot;en&quot;,
+    &quot;source&quot;: &quot;Competition&quot;,
+    &quot;target&quot;: &quot;Philosophie&quot;,
+    &quot;expected&quot;: 7
+  },
+  {
+    &quot;lang&quot;: &quot;fr&quot;,
+    &quot;source&quot;: &quot;Pigeon&quot;,
+    &quot;target&quot;: &quot;Philosophie&quot;,
+    &quot;expected&quot;: 7
+  },
+  {
+    &quot;lang&quot;: &quot;ru&quot;,
+    &quot;source&quot;: &quot;Достопримечательность&quot;,
+    &quot;target&quot;: &quot;Философия&quot;,
+    &quot;expected&quot;: 7
+  }
+]</code></pre>
+<p>Und der Bericht kommt so zurück:</p>
+<pre><code>[
+  {
+    &quot;lang&quot;: &quot;de&quot;,
+    &quot;source&quot;: &quot;Medizin&quot;,
+    &quot;target&quot;: &quot;Philosophie&quot;,
+    &quot;expected&quot;: 7,
+    &quot;actual&quot;: 7,
+    &quot;result&quot;: &quot;success&quot;
+  },
+  {
+    &quot;lang&quot;: &quot;en&quot;,
+    &quot;source&quot;: &quot;Competition&quot;,
+    &quot;target&quot;: &quot;Philosophie&quot;,
+    &quot;expected&quot;: 7,
+    &quot;actual&quot;: -1,
+    &quot;result&quot;: &quot;error: unable to extract first link of https://en.wikipedia.org/wiki/Entity&quot;
+  },
+  {
+    &quot;lang&quot;: &quot;fr&quot;,
+    &quot;source&quot;: &quot;Pigeon&quot;,
+    &quot;target&quot;: &quot;Philosophie&quot;,
+    &quot;expected&quot;: 7,
+    &quot;actual&quot;: 6,
+    &quot;result&quot;: &quot;failure&quot;
+  },
+  {
+    &quot;lang&quot;: &quot;ru&quot;,
+    &quot;source&quot;: &quot;Достопримечательность&quot;,
+    &quot;target&quot;: &quot;Философия&quot;,
+    &quot;expected&quot;: 7,
+    &quot;actual&quot;: 18,
+    &quot;result&quot;: &quot;failure&quot;
+  }
+]</code></pre>
+<h3 id="firstlink"><code>/firstlink</code></h3>
+<p>Dieser Endpunkt extrahiert den ersten Artikellink eines Wikipedia-Artikels.</p>
+<p>Es akzeptiert eine JSON-Struktur, die die Wikipedia-Sprache enthält, und enthält folgenden Artikel:</p>
+<pre><code>{
+    &quot;language&quot;: &quot;en&quot;,
+    &quot;article&quot;: &quot;ACME&quot;
+}</code></pre>
+<p>Der Dienst kann auf dem /firstlink-Endpunkt mit der POST-Methode aufgerufe werden:</p>
+<p><code>$ curl -X POST https://skiapoden.herokuapp.com/firstlink -d '{ &quot;language&quot;: &quot;en&quot;, &quot;article&quot;: &quot;Heroku&quot; }'</code></p>
+<p>Die Antwort wird eine JSON-Struktur sein:</p>
+<pre><code>{
+    &quot;firstLink&quot;: &quot;https://en.wikipedia.org/wiki/Platform_as_a_service&quot;
+}</code></pre>
+<p>© 2019 by the <a href="https://github.com/skiapoden/">Skiapoden</a> team, using the <a href="https://github.com/patrickbucher/firstlink">firstlink</a> module and <a href="https://golang.org/">Go</a>.</p>
+<h2 id="glossar">Glossar</h2>
+<ul>
+<li>Microservice: Microservices sind ein Architekturmuster der Informationstechnik, bei dem komplexe Anwendungssoftware aus unabhängigen Prozessen komponiert wird, die untereinander mit sprachunabhängigen Programmierschnittstellen kommunizieren.</li>
+<li>API Endpoints: Endpoints are important aspects of interacting with server-side web APIs, as they specify where resources lie that can be accessed by third party software. Usually the access is via a URI to which HTTP requests are posted, and from which the response is thus expected.</li>
+<li>Hops: Sprünge von einem Wikipedia-Link zum nächsten.</li>
+<li>JSON: Die JavaScript Object Notation, kurz JSON [ˈdʒeɪsən], ist ein kompaktes Datenformat in einer einfach lesbaren Textform zum Zweck des Datenaustauschs zwischen Anwendungen.</li>
+<li>Skiapoden: Skiapoden, auch Skiapodes, Schattenfüßler oder Schattenfüßer (griechisch Σκιάποδες, von griechisch σκιά (Schatten) und πούς (Fuß)) sind Fabelwesen von menschlicher Gestalt, aber mit nur einem Bein. Mit diesem sollen sie blitzschnell laufen können. Ihren riesigen Fuß halten sie beim Liegen als Sonnenschutz über sich.</li>
+</ul>
