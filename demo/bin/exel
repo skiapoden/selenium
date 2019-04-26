@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ "$#" -eq 1  ]; then
+  column -s, -t < "$1" | less -#2 -N -S
+else
+	echo "please gib *exactly* one csv file, not $#. thanks frend :^)"  
+fi
