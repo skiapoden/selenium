@@ -9,7 +9,7 @@ Microservice für das Wikipedia-Philosophiespiel
 
 1. Wählen Sie einen (zufälligen) Wikipedia-Artikel aus.
 2. Klicken Sie auf den ersten Link zu einem anderen Artikel.
-3. Zählen Sie die «Hopfen», um den Artikel Philosophie zu erreichen.
+3. Zählen Sie die «Hops», um den Artikel Philosophie zu erreichen.
 
 Dieser Microservice hilft Ihnen, das Spiel automatisch zu spielen.
 
