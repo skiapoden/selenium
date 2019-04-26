@@ -2,7 +2,7 @@
 title: SWT Skiapoden Testing Dokumentation
 ---
 
-![Entwicklungs-Team beim Testieren](./img/testen.jpg)
+![Entwicklungs-Team beim Testen](./img/testen.jpg)
 
 # Skiapoden
 Microservice für das Wikipedia-Philosophiespiel
@@ -198,9 +198,9 @@ Die Antwort wird eine JSON-Struktur sein:
 
 © 2019 by the [Skiapoden](https://github.com/skiapoden/) team, using the [firstlink](https://github.com/patrickbucher/firstlink) module and [Go](https://golang.org/).
 
-## Glossar
+## Coole Begriffe (Glossar)
 - Microservice: Microservices sind ein Architekturmuster der Informationstechnik, bei dem komplexe Anwendungssoftware aus unabhängigen Prozessen komponiert wird, die untereinander mit sprachunabhängigen Programmierschnittstellen kommunizieren.
 - API Endpoints: Endpoints are important aspects of interacting with server-side web APIs, as they specify where resources lie that can be accessed by third party software. Usually the access is via a URI to which HTTP requests are posted, and from which the response is thus expected.
 - Hops: Sprünge von einem Wikipedia-Link zum nächsten.
-- JSON: Die JavaScript Object Notation, kurz JSON [ˈdʒeɪsən], ist ein kompaktes Datenformat in einer einfach lesbaren Textform zum Zweck des Datenaustauschs zwischen Anwendungen.
-- Skiapoden: Skiapoden, auch Skiapodes, Schattenfüßler oder Schattenfüßer (griechisch Σκιάποδες, von griechisch σκιά (Schatten) und πούς (Fuß)) sind Fabelwesen von menschlicher Gestalt, aber mit nur einem Bein. Mit diesem sollen sie blitzschnell laufen können. Ihren riesigen Fuß halten sie beim Liegen als Sonnenschutz über sich. 
+- JSON: Die JavaScript Object Notation, kurz JSON, ist ein kompaktes Datenformat in einer einfach lesbaren Textform zum Zweck des Datenaustauschs zwischen Anwendungen.
+- Skiapoden: Skiapoden, auch Skiapodes, Schattenfüßler oder Schattenfüßer sind Fabelwesen von menschlicher Gestalt, aber mit nur einem Bein. Mit diesem sollen sie blitzschnell laufen können. Ihren riesigen Fuß halten sie beim Liegen als Sonnenschutz über sich. 
